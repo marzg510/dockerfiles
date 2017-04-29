@@ -37,7 +37,7 @@ docker images
 ```
 
 
-## run & uae
+## run & use
 ```
 docker run -it --rm -v ${pwd}:/root/workspace -w /root mgdev/acdcli
 #docker run -it -e "TZ=Asia/Tokyo" -v ${pwd}:/root/workspace -w /root mgdev/acdcli
@@ -45,4 +45,5 @@ docker run -it --rm -v ${pwd}:/root/workspace -w /root mgdev/acdcli
 ```
 acdcli ls /
 acdcli ul -o test /
+acdcli ul -o Videos/* /Videos/
 
