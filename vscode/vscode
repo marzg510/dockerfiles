@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+xhost local:
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix/:/tmp/.X11-unix -v /etc/localtime:/etc/localtime:ro \
+--hostname vscode \
+-v ${PWD}/config/Code:/home/vs/.config/Code \
+-v ${PWD}/config/dot_vscode:/home/vs/.vscode \
+vscode
+
