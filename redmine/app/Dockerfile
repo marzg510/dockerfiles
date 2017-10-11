@@ -1,38 +1,13 @@
-#FROM ruby:2.4
 FROM httpd
-#FROM centos:centos7
 MAINTAINER m510.net
 
 RUN apt-get update -y
-#RUN apt-get upgrade -y
-#RUN apt-get install locales
-#RUN sed -i -e "s/# ja_JP.*/ja_JP.UTF-8 UTF-8/" /etc/locale.gen
-#RUN dpkg-reconfigure -f noninteractive locales
-#RUN update-locale LANG=ja_JP.UTF-8
-#ENV LANG ja_JP.UTF-8
-
-#RUN yum -y groupinstall "Development Tools"
-#RUN yum -y install openssl-devel readline-devel zlib-devel curl-devel libyaml-devel libffi-devel wget which \
-#postgresql-devel \
-#httpd httpd-devel \
-#ImageMagick ImageMagick-devel ipa-pgothic-fonts
 
 RUN apt-get install -y build-essential zlib1g-dev libreadline-dev libyaml-dev libcurl4-openssl-dev \
-postgresql \
+postgresql postgresql-client \
 libapr1-dev libaprutil1-dev \
 imagemagick libmagick++-dev fonts-takao-gothic \
-subversion git
-#libssl-dev 
-#postgresql postgresql-server-dev-all \
-#apache2 apache2-dev libapr1-dev libaprutil1-dev \
-#imagemagick libmagick++-dev fonts-takao-gothic \
-#subversion git \
-#RUN apt-get install -y \
-#build-essential zlib1g-dev libssl-dev libreadline-dev libyaml-dev libcurl4-openssl-dev \
-#apache2 apache2-dev libapr1-dev libaprutil1-dev \
-#imagemagick libmagick++-dev fonts-takao-gothic 
-RUN apt-get install -y postgresql-client
-RUN apt-get install -y curl wget
+subversion git curl wget
 RUN apt-get install -y libssl-dev=$OPENSSL_VERSION
 
 # install ruby
@@ -66,26 +41,6 @@ ADD gen_conf.sh /tmp/gen_conf.sh
 RUN /tmp/gen_conf.sh
 
 RUN echo "Include conf/extra/redmine.conf" >>/usr/local/apache2/conf/httpd.conf
-
-#RUN echo '# configration for redmine' >/usr/local/apache2/conf/extra/redmine.conf
-#COPY <<EOF /usr/local/apache2/conf/extra/redmine.conf
-#TEST
-#EOF
-# configration for redmine
-#RUN echo '\
-## allow Redmine files\
-#<Directory "/var/lib/redmine/public">\
-#  Require all granted\
-#</Directory>\
-#'\
-#>>/usr/local/apache2/conf/extra/redmine.conf
-#cat >/etc/httpd/conf.d/redmine.conf <<EOF
-#RAILS_ENV=production REDMINE_LANG=ja /usr/local/bin/bundle exec rake redmine:load_default_data
-
-
-RUN echo please execute 2 commands below
-RUN echo bundle exec rake db:migrate
-RUN echo bundle exec rake redmine:load_default_data
 
 EXPOSE 80
 CMD ["httpd-foreground"]

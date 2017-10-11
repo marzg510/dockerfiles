@@ -1,0 +1,31 @@
+version: "2"
+services:
+  db:
+    build: database
+    environment:
+      POSTGRES_USER: redmine
+      POSTGRES_PASSWORD: password
+      TZ: Asia/Tokyo
+    volumes:
+      - db-vol:/var/lib/postgresql/data
+  ap:
+    build: app
+    environment:
+      TZ: Asia/Tokyo
+    links:
+      - db
+#    ports:
+#      - 80:80
+    volumes:
+      - file-vol:/var/lib/redmine/files
+  lb:
+    image: nginx
+    links:
+     - ap
+    volumes:
+     - ./proxy:/etc/nginx/conf.d
+    ports:
+     - "80:80"
+volumes:
+  file-vol:
+  db-vol:

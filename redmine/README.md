@@ -1,5 +1,15 @@
 # Redmine on docker
 
+
+## docker-compose
+```
+docker-compose up -d
+docker exec -it redmine_ap_1 bash
+bundle exec rake db:migrate
+bundle exec rake redmine:load_default_data
+exit
+```
+
 ## Build
 ```
 docker build -t m510.net/redmine-ap app/.
@@ -29,6 +39,13 @@ exit
 4. setting
  * http://redmine.jp/tech_note/first-step/admin/
 
+## Scale
+```
+docker-compose scale ap=2
+# edit proxy/nginx.conf
+docker-compose restart lb
+```
+
 ## Maintain
 ### db
 ```
@@ -43,6 +60,11 @@ docker run --name redmine-ap -e "TZ=Asia/Tokyo" -p 80:80 --link redmine-db:dbser
 #docker run -d -p 80:80 --rm --name webserver m510.net/redmine-proxy
 ```
 
+### log
+```
+docker logs -t redmine_ap_1
+docker logs -t redmine_db_1
+```
 ### remove 
 ```
 docker rm $(docker ps -q -f status=exited)
@@ -53,12 +75,14 @@ docker images | awk '/<none/{print $3}' | xargs docker rmi
 ### db
 ```
 docker run -it --rm --link redmine-db:dbserver postgres psql -h dbserver -U redmine
+docker run -it --rm --link redmine_dbserver_1:dbserver --net redmine_default postgres psql -h dbserver -U redmine
 
 \l
 create table t1 ( c1 char(10) primary key, c2 varchar(100));
 insert into t1 values ('k001','v001');
 select * from t1;
 \q
+
 ```
 
 ## Others
